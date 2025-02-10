@@ -12,11 +12,24 @@ spring:
     password:
 
 server:
-  port: 0
+  port: 3032
 
 eureka:
   client:
     service-url:
         defaultZone: http://localhost:8761/eureka
   instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}	
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+        exposure:
+          include: 'health,prometheus'
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    prometheus:
+      enabled: true

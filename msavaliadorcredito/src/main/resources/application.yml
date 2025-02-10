@@ -9,7 +9,7 @@ spring:
     password: guest 
 
 server:
-  port: 0
+  port: 3031
 
 eureka:
   client:
@@ -21,3 +21,16 @@ eureka:
 mq:
   queues:
     emissoes-cartao: emissoes-cartao
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+        exposure:
+          include: 'health,prometheus'
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    prometheus:
+      enabled: true		
