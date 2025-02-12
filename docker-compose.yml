@@ -9,7 +9,9 @@ volumes:
   rabbitmq_data:
 
 services:
-
+  # ====================================================================================================================
+  # RABBITMQ SERVER
+  # ====================================================================================================================
   rabbitmq:
     image: rabbitmq:3.9-management
     container_name: msrabbitmq
@@ -19,22 +21,90 @@ services:
     restart: unless-stopped
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - my-network
+# ====================================================================================================================
+# PROMETHEUS SERVER
+# ====================================================================================================================
   prometheus:
     image: prom/prometheus:latest
-    container_name: test-prometheus
+    container_name: msprometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
-      - ./eureka-targets:/etc/prometheus/eureka-targets
     networks:
       - my-network
     ports:
       - 9090:9090
+# ====================================================================================================================
+# GRAFANA SERVER
+# ====================================================================================================================
   grafana:
     image: grafana/grafana:latest
+    container_name: msgrafana
     ports:
       - 3000:3000
     networks:
       - my-network
     volumes:
       - grafana_data:/var/lib/grafana
+# ====================================================================================================================
+# EUREKA SERVER
+# ====================================================================================================================
+  eureka-server:
+    image: mseurekaserver:latest
+    container_name: mseurekaserver
+    networks:
+      - my-network
+    ports:
+      - 8761:8761
+# ====================================================================================================================
+# MICROSERVICE DE CLIENTES
+# ====================================================================================================================
+  msclientes:
+    image: msclientes:latest
+    container_name: msclientes
+    networks:
+      - my-network
+    ports:
+      - 8081:8080
+    environment:
+      - EUREKA_SERVER=mseurekaserver
+# ====================================================================================================================
+# MICROSERVICE DE CARTOES
+# ====================================================================================================================
+  mscartoes:
+    image: mscartoes:latest
+    container_name: mscartoes
+    networks:
+      - my-network
+    ports:
+      - 8082:8080
+    environment:
+      - RABBITMQ_SERVER=msrabbitmq
+      - EUREKA_SERVER=mseurekaserver
+# ====================================================================================================================
+# MICROSERVICE DE AVALIACAO DE CREDITO
+# ====================================================================================================================
+  msavaliadorcredito:
+    image: msavaliadorcredito:latest
+    container_name: msavaliadorcredito
+    networks:
+      - my-network
+    ports:
+      - 8083:8080
+    environment:
+      - RABBITMQ_SERVER=msrabbitmq
+      - EUREKA_SERVER=mseurekaserver
+# ====================================================================================================================
+# GATEWAY SERVER
+# ====================================================================================================================
+  msgateway:
+    image: msgateway:latest
+    container_name: msgateway
+    networks:
+      - my-network
+    ports:
+      - 8080:8080
+    environment:
+      - EUREKA_SERVER=mseurekaserver

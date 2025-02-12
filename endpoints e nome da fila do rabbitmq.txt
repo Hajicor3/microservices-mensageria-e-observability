@@ -1,0 +1,46 @@
+##Nome da fila do grafana##
+- emissoes-cartao
+
+##Endpoints de clientes##
+- localhost:8080/clientes
+- POST: {
+	"cpf": "",
+    	"nome": "",
+    	"idade": 
+	}
+- GET params = cpf
+
+##Endpoints de cartões##
+- http://localhost:8080/cartoes
+- POST: {
+	"nome": "",
+    	"bandeira": "", obs: bandeira é um enum.
+    	"renda": ,
+    	"limiteBasico":  
+	}
+- GET: params = renda
+lista de cartões com renda até a renda passada.
+
+-GET:params = cpf
+lista de cartões de um cliente
+
+##Endpoints de avaliadorcredito##
+POST: localhost:8080/avaliacoes-credito
+{
+    "cpf":"12345678902",
+    "renda": 10000
+}
+informa os cartões que um cliente pode ter com base na sua renda
+
+GET: localhost:8080/avaliacoes-credito/situacao-cliente?cpf=
+params = cpf
+mostra os dados do cliente e uma lista de cartões no nome do cliente
+
+GET: localhost:8080/avaliacoes-credito/solicitacoes-cartao
+{
+    "idCartao": "",
+    "cpf": "",
+    "endereco": "",
+    "limiteLiberado": 
+}
+solicita um cartão para um cliente.

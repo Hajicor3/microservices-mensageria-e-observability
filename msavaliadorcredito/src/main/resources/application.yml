@@ -3,18 +3,18 @@ spring:
    name: msavaliadorcredito
 
   rabbitmq:
-    host: localhost
+    host: ${RABBITMQ_SERVER}
     port: 5672
     username: guest
     password: guest 
 
 server:
-  port: 3031
+  port: 8080
 
 eureka:
   client:
     service-url:
-        defaultZone: http://localhost:8761/eureka
+        defaultZone: http://${EUREKA_SERVER}:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
